@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import net.engineeringDigest.journalApp.entity.JournalEntry;
 import net.engineeringDigest.journalApp.entity.User;
 import net.engineeringDigest.journalApp.repository.JournalEntryRespository;
-import net.engineeringDigest.journalApp.repository.UserRespository;
 
 @Component
 public class JournalEntryService{
@@ -38,11 +37,18 @@ public class JournalEntryService{
 		return journalEntryRepository.findById(id);
 	}
 
-	public void deleteEntryById(ObjectId id) {
+	public void deleteEntryById(ObjectId id, String username) {
+		User user = userService.findByUsername(username);
+		user.getJournalEntries().removeIf(x -> x.getId().equals(id));
+		userService.saveEntry(user);
 		journalEntryRepository.deleteById(id);
 	}
 
 	public void deleteJournalEntries() {
 		journalEntryRepository.deleteAll();
+	}
+
+	public void saveEntry(JournalEntry journalEntry) {
+		journalEntryRepository.save(journalEntry);
 	}
 }

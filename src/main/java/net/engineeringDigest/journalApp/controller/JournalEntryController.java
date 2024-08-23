@@ -37,9 +37,7 @@ public class JournalEntryController {
 	@PostMapping("/{username}")
 	public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry journalEntry, @PathVariable String username) {
 		try {
-			User user = userService.findByUsername(username);
 			journalEntryService.saveEntry(journalEntry, username);//first save the journal entry in journal_entries collection
-			
 			return new ResponseEntity<>(journalEntry, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -70,9 +68,9 @@ public class JournalEntryController {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
-	@DeleteMapping("id/{id}")
-	public ResponseEntity<?> deleteJournalEntryById(@PathVariable ObjectId id) {
-		journalEntryService.deleteEntryById(id);
+	@DeleteMapping("id/{username}/{id}")
+	public ResponseEntity<?> deleteJournalEntryById(@PathVariable ObjectId id, @PathVariable String username) {
+		journalEntryService.deleteEntryById(id, username);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
@@ -82,6 +80,7 @@ public class JournalEntryController {
 		if(oldJournalEntry!=null) {
 			oldJournalEntry.setContent(newJournalEntry.getContent()!=null && !newJournalEntry.getContent().equals("")?newJournalEntry.getContent():oldJournalEntry.getContent());
 			oldJournalEntry.setTitle(newJournalEntry.getTitle()!=null && !newJournalEntry.getTitle().equals("")?newJournalEntry.getTitle():oldJournalEntry.getTitle());
+			journalEntryService.saveEntry(oldJournalEntry);
 			return new ResponseEntity<>(oldJournalEntry, HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
