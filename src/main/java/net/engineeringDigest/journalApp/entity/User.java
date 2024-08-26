@@ -29,8 +29,10 @@ public class User {
 	
 	//users collection will keep the reference of journal_entries collection
 	@DBRef
-	List<JournalEntry> journalEntries = new ArrayList<>();
+	private List<JournalEntry> journalEntries = new ArrayList<>();
 
+	private List<String> roles;
+	
 	public ObjectId getId() {
 		return id;
 	}
@@ -61,7 +63,13 @@ public class User {
 
 	public void setJournalEntries(List<JournalEntry> journalEntries) {
 		this.journalEntries = journalEntries;
-	}	
-	
-	
+	}
+
+	public List<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
+	}		
 }
